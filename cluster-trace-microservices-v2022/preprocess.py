@@ -7,6 +7,12 @@ import glob
 def process_and_save_data(input_csv_path, output_dir):
     print(f"Processing and saving data from {input_csv_path} to {output_dir}")
     df = pd.read_csv(input_csv_path, usecols=['timestamp', 'msinstanceid', 'cpu_utilization'])
+
+    df['ms'] = df['msinstanceid'].apply(lambda x: int(x.split('_')[1]))
+    df = df[df['ms'] < 100]
+
+    # 只保留 timestamp 为 300000 整数倍的数据
+    df = df[df['timestamp'] % 300000 == 0]
     grouped = df.groupby('msinstanceid')
 
     # 确保输出目录存在
@@ -16,7 +22,7 @@ def process_and_save_data(input_csv_path, output_dir):
     for msinstanceid, data in tqdm(grouped):
         data = data[['timestamp', 'cpu_utilization']]
         data = data.sort_values(by=['timestamp'])
-        data['cpu_utilization'] = data['cpu_utilization'].apply(lambda x: min(x * 15, 0.8))
+        data['cpu_utilization'] = data['cpu_utilization'].apply(lambda x: min(x * 8, 0.99))
         output_file_path = os.path.join(output_dir, f'{msinstanceid}.csv')
         # 如果文件存在，追加到文件后面而不是覆盖
         if os.path.exists(output_file_path):
