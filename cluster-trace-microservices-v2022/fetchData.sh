@@ -7,12 +7,10 @@ prepare_dir() {
 # $3 = start_hour, $4 = end_hour
 fetch_data() {
     declare -a file_names=(
-        "data/CallGraph/CallGraph" "data/MSMetrics/MSMetrics"
-        "data/NodeMetrics/NodeMetrics" "data/MSRTMCR/MSRTMCR"
+        "data/MSMetrics/MSMetrics"
     )
     declare -a remote_paths=(
-        "CallGraph/CallGraph" "MSMetricsUpdate/MSMetricsUpdate"
-        "NodeMetricsUpdate/NodeMetricsUpdate" "MCRRTUpdate/MCRRTUpdate"
+        "MSMetricsUpdate/MSMetricsUpdate"
     )
     declare -a ratios=(3 30 720 3)
     start_hour=$(($1 * 24 * 60 + $3 * 60))
